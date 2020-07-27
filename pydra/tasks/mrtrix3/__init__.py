@@ -1,5 +1,8 @@
-"""
->>> import pydra.tasks.MRtrix3
+""
+This is a basic doctest demonstrating that the package and pydra can both be successfully
+imported.
+>>> import pydra.engine
+>>> import pydra.tasks.mrtrix3
 """
 from ._version import get_versions
 
