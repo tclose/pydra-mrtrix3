@@ -3,6 +3,10 @@
 
 name: Python package
 
+# Set once
+env:
+  SUBPACKAGE: MRtrix3
+
 on:
   push:
     branches: [ master ]
@@ -11,7 +15,6 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -23,10 +26,18 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: ${{ matrix.python-version }}
-    - name: Install dependencies
+    - name: Install build dependencies
       run: |
         python -m pip install --upgrade pip
+    - name: Install Pydra
+      run: |
+        pip install pydra
+        python -c "import pydra as m; print(f'{m.__name__} {m.__version__} @ {m.__file__}')"
+    - name: Install task package
+      run: |
         pip install ".[dev]"
+        python -c "import pydra.tasks.$SUBPACKAGE as m; print(f'{m.__name__} {m.__version__} @ {m.__file__}')"
+        python -c "import pydra as m; print(f'{m.__name__} {m.__version__} @ {m.__file__}')"
     - name: Test with pytest
       run: |
-        pytest -sv --doctest-modules pydra/tasks/MRtrix3
+        pytest -sv --doctest-modules pydra/tasks/$SUBPACKAGE

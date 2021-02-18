@@ -1,4 +1,5 @@
 """
+>>> import pydra
 >>> import pydra.tasks.MRtrix3
 """
 from ._version import get_versions
