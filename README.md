@@ -1,4 +1,4 @@
-# Pydra Tasks for MRTRIX3
+# Pydra Tasks for mrtrix3
 
 ## For developers
 
