@@ -131,25 +131,32 @@ MRConvertOutputSpec = SpecInfo(
     bases=(ShellOutSpec,),
 )
 
-
-#  Create task for pydra
-MRConvert =  ShellCommandTask(
-    name='MRConvert',
-    executable="mrconvert",
-    in_file="/Users/xxie/sample_data/tinnitus2/sub-MINN294/ses-01/dwi/sub-MINN294_ses-01_run-1_dwi.nii",
-    grad_fsl=(
-        "/Users/xxie/sample_data/tinnitus2/sub-MINN294/ses-01/dwi/sub-MINN294_ses-01_run-1_dwi.bvec",
-        "/Users/xxie/sample_data/tinnitus2/sub-MINN294/ses-01/dwi/sub-MINN294_ses-01_run-1_dwi.bval"
-        ),
-    export_grad="sub-MINN294_ses-01_run-1.b",
-    out_file="sub-MINN294_ses-01_run-1.mif",
-    input_spec=MRConvertInputSpec,
-    output_spec=MRConvertOutputSpec
-)
-
-# try running the task:
-print(MRConvert.cmdline)
-print(MRConvert.inputs.executable)
-assert MRConvert.inputs.executable == "mrconvert"
-MRConvert()
-MRConvert.result()
+class MRConvert(ShellCommandTask):
+    """
+    Example
+    ------
+    >>> task = MRConvert()
+    >>> task.inputs.in_file = "test_dwi.nii.gz"
+    >>> task.inputs.grad_fsl = ("test.bvec", "test.bval")
+    >>> task.inputs.export_grad = "test.b"
+    >>> task.inputs.out_file = "test.mif"
+    >>> task.cmdline
+    `mrconvert test_dwi.nii.gz -fslgrad test.bvec test.bval -export_grad_mrtrix test.b test.mif`
+    """
+    input_spec = MRConvertInputSpec
+    output_spec = MRConvertOutputSpec
+    executable = "mrconvert"
+    
+# MRConvert =  ShellCommandTask(
+#     name='MRConvert',
+#     executable="mrconvert",
+#     in_file="tests/data/test_dwi.nii.gz",
+#     grad_fsl=(
+#         "tests/data/test.bvec",
+#         "tests/data/test.bval"
+#         ),
+#     export_grad="tests/data/test.b",
+#     out_file="tests/data/test.mif",
+#     input_spec=MRConvertInputSpec,
+#     output_spec=MRConvertOutputSpec
+# )
