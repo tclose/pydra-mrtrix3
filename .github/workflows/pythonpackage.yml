@@ -5,7 +5,7 @@ name: Python package
 
 # Set once
 env:
-  SUBPACKAGE: MRtrix3
+  SUBPACKAGE: mrtrix3
 
 on:
   push:
