@@ -1,9 +1,9 @@
 import attr
-import typing as ty 
+import typing as ty
 from pydra import ShellCommandTask
 from pydra.engine.specs import File, SpecInfo, ShellSpec, ShellOutSpec
 from .base import MRTrix3BaseSpec
-    
+
 
 MRConvertInputSpec = SpecInfo(
     name="MRConvertInputs",
@@ -15,19 +15,13 @@ MRConvertInputSpec = SpecInfo(
                 metadata={
                     "position": 4,
                     "help_string": "input image",
-                    "mandatory": True
+                    "mandatory": True,
                 },
             ),
         ),
         (
             "out_file",
-            attr.ib(
-                type=str,
-                metadata={
-                    "position": 5,
-                    "help_string": "output image",
-                },
-            ),
+            attr.ib(type=str, metadata={"position": 5, "help_string": "output image"}),
         ),
         (
             "coord",
@@ -76,7 +70,7 @@ MRConvertInputSpec = SpecInfo(
                 metadata={
                     "argstr": "-export_grad_mrtrix",
                     "position": 3,
-                    "help_string":  "export new gradient files in mrtrix3 format"
+                    "help_string": "export new gradient files in mrtrix3 format",
                 },
             ),
         ),
@@ -86,7 +80,7 @@ MRConvertInputSpec = SpecInfo(
                 type=str,
                 metadata={
                     "argstr": "-json_export",
-                    "help_string": "export image headet to JSON file"
+                    "help_string": "export image headet to JSON file",
                 },
             ),
         ),
@@ -95,7 +89,7 @@ MRConvertInputSpec = SpecInfo(
 )
 
 MRConvertOutputSpec = SpecInfo(
-    name = "MRConvertOutputs",
+    name="MRConvertOutputs",
     fields=[
         (
             "out_file",
@@ -103,7 +97,7 @@ MRConvertOutputSpec = SpecInfo(
                 type=File,
                 metadata={
                     "help_string": "output image",
-                    "output_file_template": "dwi.mif"
+                    "output_file_template": "dwi.mif",
                 },
             ),
         ),
@@ -113,7 +107,7 @@ MRConvertOutputSpec = SpecInfo(
                 type=File,
                 metadata={
                     "help_string": "output .b gradient file in mrtrix3 format",
-                    "output_file_template": "dwi.b"
+                    "output_file_template": "dwi.b",
                 },
             ),
         ),
@@ -123,13 +117,14 @@ MRConvertOutputSpec = SpecInfo(
                 type=File,
                 metadata={
                     "help_string": "output JSON file of image header",
-                    "output_file_template": "dwi.json"
+                    "output_file_template": "dwi.json",
                 },
             ),
         ),
     ],
     bases=(ShellOutSpec,),
 )
+
 
 class MRConvert(ShellCommandTask):
     """
@@ -143,20 +138,7 @@ class MRConvert(ShellCommandTask):
     >>> task.cmdline
     `mrconvert test_dwi.nii.gz -fslgrad test.bvec test.bval -export_grad_mrtrix test.b test.mif`
     """
+
     input_spec = MRConvertInputSpec
     output_spec = MRConvertOutputSpec
     executable = "mrconvert"
-    
-# MRConvert =  ShellCommandTask(
-#     name='MRConvert',
-#     executable="mrconvert",
-#     in_file="tests/data/test_dwi.nii.gz",
-#     grad_fsl=(
-#         "tests/data/test.bvec",
-#         "tests/data/test.bval"
-#         ),
-#     export_grad="tests/data/test.b",
-#     out_file="tests/data/test.mif",
-#     input_spec=MRConvertInputSpec,
-#     output_spec=MRConvertOutputSpec
-# )
