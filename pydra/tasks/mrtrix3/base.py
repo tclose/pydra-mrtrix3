@@ -31,7 +31,6 @@ class MRTrix3BaseSpec(ShellSpec):
     grad_fsl: ty.List[File] = attr.ib(
         metadata={
             "help_string": "FSL format gradient files [bvecs, bvals]",
-            "position": 1,
             "argstr": "-fslgrad",
             "xor": "grad_file",
         }

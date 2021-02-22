@@ -13,7 +13,8 @@ MRConvertInputSpec = SpecInfo(
             attr.ib(
                 type=File,
                 metadata={
-                    "position": 4,
+                    "argstr": "{in_file}",
+                    "position": 1,
                     "help_string": "input image",
                     "mandatory": True,
                 },
@@ -21,7 +22,14 @@ MRConvertInputSpec = SpecInfo(
         ),
         (
             "out_file",
-            attr.ib(type=str, metadata={"position": 5, "help_string": "output image"}),
+            attr.ib(
+                type=str,
+                metadata={
+                    "argstr": "{out_file}",
+                    "position": -1,
+                    "help_string": "output image",
+                },
+            ),
         ),
         (
             "coord",
@@ -69,7 +77,6 @@ MRConvertInputSpec = SpecInfo(
                 type=str,
                 metadata={
                     "argstr": "-export_grad_mrtrix",
-                    "position": 3,
                     "help_string": "export new gradient files in mrtrix3 format",
                 },
             ),
@@ -136,7 +143,7 @@ class MRConvert(ShellCommandTask):
     >>> task.inputs.export_grad = "test.b"
     >>> task.inputs.out_file = "test.mif"
     >>> task.cmdline
-    `mrconvert test_dwi.nii.gz -fslgrad test.bvec test.bval -export_grad_mrtrix test.b test.mif`
+    'mrconvert test_dwi.nii.gz -fslgrad test.bvec test.bval -export_grad_mrtrix test.b test.mif'
     """
 
     input_spec = MRConvertInputSpec
