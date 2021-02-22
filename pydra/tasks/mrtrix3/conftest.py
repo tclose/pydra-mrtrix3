@@ -28,5 +28,5 @@ def _docdir(request):
         # For normal tests, yield:
         yield
 
-    def pytest_unconfigure(config):
-        shutil.rmtree(temp_folder)
+def pytest_unconfigure(config):
+    shutil.rmtree(temp_folder)
