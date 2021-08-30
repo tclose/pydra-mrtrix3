@@ -5,8 +5,8 @@ from pydra.engine.specs import ShellSpec, File
 
 @attr.s(auto_attribs=True, kw_only=True)
 class MRTrix3BaseSpec(ShellSpec):
-    """ mrtrix3 command standard input specs
-            - includes: nthreads, grad_file, grad_fsl, force, quiet
+    """mrtrix3 command standard input specs
+    - includes: nthreads, grad_file, grad_fsl, force, quiet
     """
 
     # number of threads
