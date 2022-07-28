@@ -145,7 +145,7 @@ class MRConvert(ShellCommandTask):
     >>> task.inputs.in_file = "test_dwi.nii.gz"
     >>> task.inputs.grad_fsl = ["test.bvec", "test.bval"]
     >>> task.inputs.export_grad = "test.b"
-    >>> task.inputs.out_file = "test.mif"
+    >>> task.inputs.out_filename = "test.mif"
     >>> task.cmdline
     'mrconvert test_dwi.nii.gz -fslgrad test.bvec test.bval -export_grad_mrtrix test.b test.mif'
     """
