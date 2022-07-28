@@ -45,9 +45,8 @@ MRConvertInputSpec = SpecInfo(
             "vox",
             attr.ib(
                 type=ty.List[float],
-                
                 metadata={
-                    'sep': ',',
+                    "sep": ",",
                     "argstr": "-vox",
                     "help_string": "change the voxel dimensions",
                 },
@@ -58,7 +57,7 @@ MRConvertInputSpec = SpecInfo(
             attr.ib(
                 type=ty.List[int],
                 metadata={
-                    'sep': ',',
+                    "sep": ",",
                     "argstr": "-axes",
                     "help_string": "specify the axes that will be used",
                 },
@@ -69,7 +68,7 @@ MRConvertInputSpec = SpecInfo(
             attr.ib(
                 type=ty.List[float],
                 metadata={
-                    'sep': ',',
+                    "sep": ",",
                     "argstr": "-scaling",
                     "help_string": "specify the data scaling parameter",
                 },
