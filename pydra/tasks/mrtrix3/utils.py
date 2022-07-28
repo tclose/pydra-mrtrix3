@@ -21,11 +21,11 @@ MRConvertInputSpec = SpecInfo(
             ),
         ),
         (
-            "out_file",
+            "out_filename",
             attr.ib(
                 type=str,
                 metadata={
-                    "argstr": "{out_file}",
+                    "argstr": "{out_filename}",
                     "position": -1,
                     "help_string": "output image",
                 },
@@ -45,7 +45,9 @@ MRConvertInputSpec = SpecInfo(
             "vox",
             attr.ib(
                 type=ty.List[float],
+                
                 metadata={
+                    'sep': ',',
                     "argstr": "-vox",
                     "help_string": "change the voxel dimensions",
                 },
@@ -56,6 +58,7 @@ MRConvertInputSpec = SpecInfo(
             attr.ib(
                 type=ty.List[int],
                 metadata={
+                    'sep': ',',
                     "argstr": "-axes",
                     "help_string": "specify the axes that will be used",
                 },
@@ -66,6 +69,7 @@ MRConvertInputSpec = SpecInfo(
             attr.ib(
                 type=ty.List[float],
                 metadata={
+                    'sep': ',',
                     "argstr": "-scaling",
                     "help_string": "specify the data scaling parameter",
                 },
@@ -76,8 +80,8 @@ MRConvertInputSpec = SpecInfo(
             attr.ib(
                 type=str,
                 metadata={
-                    "argstr": "-export_grad_mrtrix",
-                    "help_string": "export new gradient files in mrtrix3 format",
+                    "argstr": "-export_grad_mrtrix {export_grad}",
+                    "help_string": "export gradient files in mrtrix3 format",
                 },
             ),
         ),
@@ -86,7 +90,7 @@ MRConvertInputSpec = SpecInfo(
             attr.ib(
                 type=str,
                 metadata={
-                    "argstr": "-json_export",
+                    "argstr": "-json_export {export_json}",
                     "help_string": "export image headet to JSON file",
                 },
             ),
@@ -104,7 +108,7 @@ MRConvertOutputSpec = SpecInfo(
                 type=File,
                 metadata={
                     "help_string": "output image",
-                    "output_file_template": "dwi.mif",
+                    "output_file_template": "{out_filename}",
                 },
             ),
         ),
@@ -114,7 +118,7 @@ MRConvertOutputSpec = SpecInfo(
                 type=File,
                 metadata={
                     "help_string": "output .b gradient file in mrtrix3 format",
-                    "output_file_template": "dwi.b",
+                    "output_file_template": "{export_grad}",
                 },
             ),
         ),
@@ -124,7 +128,7 @@ MRConvertOutputSpec = SpecInfo(
                 type=File,
                 metadata={
                     "help_string": "output JSON file of image header",
-                    "output_file_template": "dwi.json",
+                    "output_file_template": "{export_json}",
                 },
             ),
         ),
