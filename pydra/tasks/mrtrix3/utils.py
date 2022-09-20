@@ -11,7 +11,9 @@ MRConvertInputSpec = SpecInfo(
         (
             "in_file",
             attr.ib(
-                type=ty.Union[Path, str],  # union with str until https://github.com/nipype/pydra/issues/579 is resolved
+                type=ty.Union[
+                    Path, str
+                ],  # union with str until https://github.com/nipype/pydra/issues/579 is resolved
                 metadata={
                     "argstr": "{in_file}",
                     "position": 1,
