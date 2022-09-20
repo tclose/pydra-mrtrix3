@@ -11,7 +11,7 @@ MRConvertInputSpec = SpecInfo(
         (
             "in_file",
             attr.ib(
-                type=Path,
+                type=ty.Union[Path, str],  # union with str until https://github.com/nipype/pydra/issues/579 is resolved
                 metadata={
                     "argstr": "{in_file}",
                     "position": 1,
@@ -36,6 +36,7 @@ MRConvertInputSpec = SpecInfo(
             attr.ib(
                 type=ty.List[float],
                 metadata={
+                    "sep": ",",
                     "argstr": "-coord",
                     "help_string": "extract data at the specific coordinatest",
                 },
