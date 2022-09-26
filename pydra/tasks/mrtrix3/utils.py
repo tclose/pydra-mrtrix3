@@ -23,13 +23,12 @@ MRConvertInputSpec = SpecInfo(
             ),
         ),
         (
-            "out_filename",
+            "out_file",
             attr.ib(
-                type=str,
+                type=File,
                 metadata={
-                    "argstr": "{out_filename}",
-                    "position": -1,
                     "help_string": "output image",
+                    "output_file_template": "{in_file}_converted",
                 },
             ),
         ),
@@ -38,7 +37,7 @@ MRConvertInputSpec = SpecInfo(
             attr.ib(
                 type=ty.List[float],
                 metadata={
-                    "sep": ",",
+                    "sep": " ",
                     "argstr": "-coord",
                     "help_string": "extract data at the specific coordinatest",
                 },
@@ -105,16 +104,6 @@ MRConvertOutputSpec = SpecInfo(
     name="MRConvertOutputs",
     fields=[
         (
-            "out_file",
-            attr.ib(
-                type=File,
-                metadata={
-                    "help_string": "output image",
-                    "output_file_template": "{out_filename}",
-                },
-            ),
-        ),
-        (
             "out_bfile",
             attr.ib(
                 type=File,
@@ -147,7 +136,7 @@ class MRConvert(ShellCommandTask):
     >>> task.inputs.in_file = "test_dwi.nii.gz"
     >>> task.inputs.grad_fsl = ["test.bvec", "test.bval"]
     >>> task.inputs.export_grad = "test.b"
-    >>> task.inputs.out_filename = "test.mif"
+    >>> task.inputs.out_file = "test.mif"
     >>> task.cmdline
     'mrconvert test_dwi.nii.gz -fslgrad test.bvec test.bval -export_grad_mrtrix test.b test.mif'
     """
