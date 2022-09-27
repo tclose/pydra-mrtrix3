@@ -1,7 +1,7 @@
 import attr
 import typing as ty
 from pydra import ShellCommandTask
-from pydra.engine.specs import Path, File, SpecInfo, ShellOutSpec
+from pydra.engine.specs import SpecInfo, ShellOutSpec
 from .base import MRTrix3BaseSpec
 
 
@@ -11,9 +11,7 @@ MRConvertInputSpec = SpecInfo(
         (
             "in_file",
             attr.ib(
-                type=ty.Union[
-                    Path, str
-                ],  # union with str until https://github.com/nipype/pydra/issues/579 is resolved
+                type=str,
                 metadata={
                     "argstr": "{in_file}",
                     "position": 1,
@@ -25,7 +23,7 @@ MRConvertInputSpec = SpecInfo(
         (
             "out_file",
             attr.ib(
-                type=ty.Union[Path, str],
+                type=str,
                 metadata={
                     "position": -1,
                     "argstr": "",
