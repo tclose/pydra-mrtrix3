@@ -84,7 +84,8 @@ MRConvertInputSpec = SpecInfo(
                 type=str,
                 metadata={
                     "argstr": "-export_grad_mrtrix {export_grad}",
-                    "help_string": "export gradient files in mrtrix3 format",
+                    "help_string": "export gradient encodings in mrtrix3 file format",
+                    "output_file_template": "{export_grad}",
                 },
             ),
         ),
@@ -95,37 +96,29 @@ MRConvertInputSpec = SpecInfo(
                 metadata={
                     "argstr": "-json_export {export_json}",
                     "help_string": "export image headet to JSON file",
+                    "output_file_template": "{export_json}",
                 },
             ),
         ),
+        # (
+        #     "export_grad_fsl",
+        #     attr.ib(
+        #         type=ty.Tuple[str, str],
+        #         metadata={
+        #             "argstr": "-export_grad_fsl",
+        #             "help_string": "export gradient encodings in FSL file format",
+        #             "sep": " ",
+        #             "output_file_template": "{in_file}_bvec {in_file}_bval",
+        #         },
+        #     )
+        # )
     ],
     bases=(MRTrix3BaseSpec,),
 )
 
 MRConvertOutputSpec = SpecInfo(
     name="MRConvertOutputs",
-    fields=[
-        (
-            "out_bfile",
-            attr.ib(
-                type=File,
-                metadata={
-                    "help_string": "output .b gradient file in mrtrix3 format",
-                    "output_file_template": "{export_grad}",
-                },
-            ),
-        ),
-        (
-            "out_json",
-            attr.ib(
-                type=File,
-                metadata={
-                    "help_string": "output JSON file of image header",
-                    "output_file_template": "{export_json}",
-                },
-            ),
-        ),
-    ],
+    fields=[],
     bases=(ShellOutSpec,),
 )
 
@@ -150,22 +143,29 @@ class MRConvert(ShellCommandTask):
 
     >>> task = MRConvert()
     >>> task.inputs.in_file = "test_dwi.nii.gz"
-    >>> task.inputs.out_file = "test_vol.nii.gz"
+    >>> task.inputs.out_file = "vol.nii.gz"
     >>> task.inputs.coord = [3, 0]
     >>> task.cmdline
-    'mrconvert test_dwi.nii.gz -coord 3 0 test_vol.nii.gz'
+    'mrconvert test_dwi.nii.gz -coord 3 0 vol.nii.gz'
 
     Extend a 3D image to 4D by adding a singular dimension
 
     >>> task = MRConvert()
-    >>> task.inputs.in_file = "test.nii.gz"
-    >>> task.inputs.out_file = "test_set.nii.gz"
+    >>> task.inputs.in_file = "test_b0.nii.gz"
+    >>> task.inputs.out_file = "4d.nii.gz"
     >>> task.inputs.axes = [0, 1, 2, -1]
     >>> task.cmdline
-    'mrconvert test.nii.gz -axes 0,1,2,-1 test_set.nii.gz'
+    'mrconvert test_b0.nii.gz -axes 0,1,2,-1 4d.nii.gz'
 
     """
 
     input_spec = MRConvertInputSpec
     output_spec = MRConvertOutputSpec
     executable = "mrconvert"
+
+    # >>> task = MRConvert()
+    # >>> task.inputs.in_file = "test_dwi.mif"
+    # >>> task.inputs.export_grad_fsl = ("test.bvec", "test.bval")
+    # >>> task.inputs.out_file = "test.mif"
+    # >>> task.cmdline
+    # 'mrconvert test_dwi.mif -export_grad_fsl test.bvec test.bval test.mif'
