@@ -1,8 +1,25 @@
 import attr
 import typing as ty
+from pathlib import Path
 from pydra import ShellCommandTask
 from pydra.engine.specs import SpecInfo, ShellOutSpec
 from .base import MRTrix3BaseSpec
+
+
+# FIXME: manually setting out_file output as work-around until https://github.com/nipype/pydra/pull/585 is released (or alternative solution is provided)
+def out_file_output(field, inputs):
+    if inputs.out_file:
+        out_file = inputs.out_file
+    else:
+        filename = Path(inputs.in_file).name
+        if filename.endswith(".nii.gz"):
+            basename = filename[: -len(".nii.gz")]
+            ext = ".nii.gz"
+        else:
+            basename = filename.stem
+            ext = filename.suffix()
+        out_file = f"{basename}_converted{ext}"
+    return Path(out_file).absolute()
 
 
 MRConvertInputSpec = SpecInfo(
@@ -28,7 +45,7 @@ MRConvertInputSpec = SpecInfo(
                     "position": -1,
                     "argstr": "",
                     "help_string": "output image",
-                    "output_file_template": "{in_file}_converted",
+                    # "output_file_template": "{in_file}_converted",
                 },
             ),
         ),
@@ -116,7 +133,18 @@ MRConvertInputSpec = SpecInfo(
 
 MRConvertOutputSpec = SpecInfo(
     name="MRConvertOutputs",
-    fields=[],
+    fields=[
+        (
+            "out_file",
+            attr.ib(
+                type=str,
+                metadata={
+                    "help_string": "output image",
+                    "callable": out_file_output,
+                },
+            ),
+        )
+    ],
     bases=(ShellOutSpec,),
 )
 
