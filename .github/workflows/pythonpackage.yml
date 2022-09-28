@@ -52,9 +52,20 @@ jobs:
     strategy:
       matrix:
         python-version: [3.7, 3.8, 3.9]
-
+    defaults:
+      run:
+        shell: bash -l {0}
     steps:
     - uses: actions/checkout@v2
+    - name: Install Minconda
+      uses: conda-incubator/setup-miniconda@v2
+      with:
+        auto-activate-base: true
+        activate-environment: ""
+    - name: Install MRtrix via Conda
+      run: |
+        conda install -c mrtrix3 mrtrix3
+        mrconvert --version
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v2
       with:
