@@ -55,6 +55,12 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+    - name: Install Minconda
+      uses: conda-incubator/setup-miniconda@v2
+    - name: Install MRtrix via Conda
+      run: |
+        conda install -c mrtrix3 mrtrix3
+        mrconvert --version
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v2
       with:
