@@ -55,20 +55,17 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    # - name: Install Minconda
-    #   uses: conda-incubator/setup-miniconda@v2
-    #   with:
-    #     auto-activate-base: true
-    #     activate-environment: ""
-    # - name: Install MRtrix via Conda
-    #   run: |
-    #     conda install -c mrtrix3 mrtrix3
-    #     conda list
-    #     mrconvert --version
-    - name: Install mrtrix
+    - name: Install MRtrix3 dependencies
       run: |
         sudo apt update
-        sudo apt install mrtrix
+        sudo apt-get install git g++ python python-numpy libeigen3-dev zlib1g-dev libqt4-opengl-dev libgl1-mesa-dev libfftw3-dev libtiff5-dev
+    - name: Install MRtrix3 from source
+      run: |
+        git clone https://github.com/MRtrix3/mrtrix3.git
+        cd mrtrix3
+        ./configure
+        ./build cmd/mrconvert
+        cd -
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v2
       with:
