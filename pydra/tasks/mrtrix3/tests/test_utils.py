@@ -26,10 +26,12 @@ def test_mrconvert_default_out_file(nifti_dataset):
     assert Path(result.output.out_file).exists()
 
 
-@pytest.mark.skip(
-    "Skip test of mrconvert with explicit out_file field provided until "
-    "https://github.com/nipype/pydra/pull/585 (or equivalent) is merged "
-    "into main branch"
+@pytest.mark.xfail(
+    reason=(
+        "Cannot pass input to input field with 'output_file_template' "
+        "https://github.com/nipype/pydra/pull/585 (or equivalent) is merged "
+        "into main branch"
+    )
 )
 def test_mrconvert_explicit_out_file(dwi_dicom_dataset):
 
