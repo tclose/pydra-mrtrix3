@@ -64,7 +64,7 @@ jobs:
         git clone https://github.com/MRtrix3/mrtrix3.git
         cd mrtrix3
         ./configure -nogui
-        ./build cmd/mrconvert
+        ./build bin/mrconvert
         cd -
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v2
