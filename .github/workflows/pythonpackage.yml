@@ -63,9 +63,12 @@ jobs:
     # - name: Install MRtrix via Conda
     #   run: |
     #     conda install -c mrtrix3 mrtrix3
+    #     conda list
     #     mrconvert --version
     - name: Install mrtrix
-      run: sudo apt install mrtrix
+      run: |
+        sudo apt update
+        sudo apt install mrtrix
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v2
       with:
