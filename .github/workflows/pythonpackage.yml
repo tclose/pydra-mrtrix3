@@ -58,7 +58,7 @@ jobs:
     - name: Install MRtrix3 dependencies
       run: |
         sudo apt update
-        sudo apt-get install git g++ python python-numpy libeigen3-dev zlib1g-dev libgl1-mesa-dev libfftw3-dev libtiff5-dev
+        sudo apt-get install git g++ python python-numpy libeigen3-dev libqt5-opengl-dev zlib1g-dev libgl1-mesa-dev libfftw3-dev libtiff5-dev
     - name: Install MRtrix3 from source
       run: |
         git clone https://github.com/MRtrix3/mrtrix3.git
