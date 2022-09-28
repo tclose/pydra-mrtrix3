@@ -1,5 +1,12 @@
 import os
+import tempfile
+from pathlib import Path
 import pytest
+
+
+@pytest.fixture
+def work_dir():
+    return Path(tempfile.mkdtemp())
 
 
 # For debugging in IDE's don't catch raised exceptions and let the IDE
