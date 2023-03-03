@@ -1,20 +1,20 @@
 from pathlib import Path
 import pytest
 from pydra.tasks.mrtrix3.utils import MRConvert
-from medimages4tests.dicom.mri.dwi.siemens.skyra.syngo_d13c import (
-    sample_image as sample_dwi_dicom,
+from medimages4tests.dummy.dicom.mri.dwi.siemens.skyra.syngo_d13c import (
+    get_image as get_dwi_dicom,
 )
-from medimages4tests.nifti import sample_image as sample_nifti
+from medimages4tests.dummy.nifti import get_image as get_nifti
 
 
 @pytest.fixture
 def dwi_dicom_dataset():
-    return sample_dwi_dicom()
+    return get_dwi_dicom()
 
 
 @pytest.fixture
 def nifti_dataset(work_dir):
-    return sample_nifti(work_dir / "nifti", compressed=True)
+    return get_nifti(work_dir / "nifti", compressed=True)
 
 
 def test_mrconvert_default_out_file(nifti_dataset):
