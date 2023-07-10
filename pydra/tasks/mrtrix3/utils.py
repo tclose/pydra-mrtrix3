@@ -35,7 +35,7 @@ MRConvertInputSpec = SpecInfo(
         (
             "coord",
             attr.ib(
-                type=ty.List[float],
+                type=ty.Tuple[int, ty.Union[int, str]],
                 metadata={
                     "sep": " ",
                     "argstr": "-coord",
