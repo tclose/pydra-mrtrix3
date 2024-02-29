@@ -227,7 +227,7 @@ jobs:
 
     - name: Install task package
       run: |
-        pip install .fileformats-medimage-mrtrix interfaces/ ./fileformats-medimage-mrtrix-extras ''.[test]'
+        pip install .fileformats-medimage-mrtrix ./fileformats-medimage-mrtrix-extras '.[test]'
         python -c "import pydra.tasks.mrtrix3 as m; print(f'{m.__name__} {m.__version__} @ {m.__file__}')"
         python -c "import pydra as m; print(f'{m.__name__} {m.__version__} @ {m.__file__}')"
 
@@ -243,38 +243,44 @@ jobs:
   deploy:
     needs: [devcheck, test]
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: [3.11]
+    env:
+      PYTHON_VERSION: 3.11
     steps:
+    - name: Download version file
+      uses: actions/download-artifact@v2
+      with:
+        name: VersionFile
+        path: mrtrix3_version.txt
+
+    - name: Extract Mrtrix version
+      run: echo "MRTRIX3_VERSION=$(cat mrtrix3_version.txt)" >> $GITHUB_ENV
     - uses: actions/checkout@v2
 
     - name: Download auto-gen pydra
       uses: actions/download-artifact@v2
       with:
         name: AutoGen
-        path: interfaces/pydra/src/pydra/tasks/mrtrix3/v3_0
+        path: pydra/tasks/mrtrix3/$MRTRIX3_VERSION
 
-    - name: Set up Python ${{ matrix.python-version }}
+    - name: Set up Python $PYTHON_VERSION
       uses: actions/setup-python@v2
       with:
-        python-version: ${{ matrix.python-version }}
+        python-version: $PYTHON_VERSION
 
     - name: Install build tools
       run: python -m pip install --upgrade pip twine build
 
     - name: Build source and wheel distributions
-      working-directory: ./interfaces/pydra/src
       run: python -m build
 
     - name: Check distributions
-      run: twine check interfaces/pydra/src/dist/*
+      run: twine check dist/*
 
     - name: Upload sdist
       uses: actions/upload-artifact@v2
       with:
         name: SDist
-        path: interfaces/pydra/src/dist/*.tar.gz
+        path: dist/*.tar.gz
 
     # Deploy on tags if PYPI_API_TOKEN is defined in the repository secrets.
     # Secrets are not accessible in the if: condition [0], so set an output variable [1]
@@ -293,4 +299,4 @@ jobs:
       with:
         user: __token__
         password: ${{ secrets.PYPI_API_TOKEN }}
-        packages-dir: interfaces/pydra/src/dist/
+        packages-dir: dist/
