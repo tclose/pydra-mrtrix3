@@ -97,6 +97,7 @@ class ImageFormat(BaseMrtrixImage):
 
 class ImageFormatGz(Gzip[ImageFormat]):
 
+    iana_mime = None
     ext = ".mif.gz"
 
 
