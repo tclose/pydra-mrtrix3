@@ -17,6 +17,7 @@ from fileformats.core import FileSet
 from fileformats.medimage_mrtrix3 import ImageFormat, ImageIn, ImageOut, Tracks
 from pydra.engine.helpers import make_klass
 from pydra.engine import specs
+from pydra.utils import add_exc_note
 
 
 logger = logging.getLogger("pydra-auto-gen")
@@ -135,9 +136,15 @@ def auto_gen_mrtrix3_pydra(
         ):
             continue
         cmd = [str(cmd_dir / cmd_name)]
-        cmds.extend(
-            auto_gen_cmd(cmd, cmd_name, output_dir, cmd_dir, log_errors, pkg_version)
-        )
+        try:
+            cmds.extend(
+                auto_gen_cmd(
+                    cmd, cmd_name, output_dir, cmd_dir, log_errors, pkg_version
+                )
+            )
+        except Exception as e:
+            add_exc_note(e, f"when attempting to generate {cmd} in {output_dir}")
+            raise e
 
     # Write init
     init_path = output_dir / "pydra" / "tasks" / "mrtrix3" / pkg_version / "__init__.py"
