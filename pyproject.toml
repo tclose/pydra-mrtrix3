@@ -9,7 +9,8 @@ readme = "README.rst"
 requires-python = ">=3.8"
 dependencies = [
     "pydra >=0.22",
-    "fileformats-medimage >=0.3.4"]
+    "fileformats-medimage_mrtrix3 >=3.0.3a",
+    "pytest"]  # bug in fileformats requires this currently
 license = {file = "LICENSE"}
 authors = [
     {name = "Thomas G. Close", email = "tom.g.close@gmail.com"},
