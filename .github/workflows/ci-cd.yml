@@ -52,7 +52,7 @@ jobs:
         run: |
           git clone https://github.com/tclose/mrtrix3.git
           cd mrtrix3
-          git checkout pydra-usage
+          git checkout pydra-usage-python-cmd
           echo "MRTRIX3_VERSION=$(git describe --tags --abbrev=0)" >> $GITHUB_ENV
           git checkout $MRTRIX3_VERSION
 
