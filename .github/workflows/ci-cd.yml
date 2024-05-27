@@ -17,6 +17,7 @@ on:
 
 env:
   MRTRIX3_HOME: /opt/mrtrix3/latest/install
+  MRTRIX3_VERSION: 3.0.3a2
 
 jobs:
 
@@ -58,8 +59,9 @@ jobs:
           git clone https://github.com/tclose/mrtrix3.git /opt/mrtrix3/src
           cd /opt/mrtrix3/src
           git checkout pydra-usage-python-cmd
-          echo "MRTRIX3_VERSION=$(git describe --tags --abbrev=0)" >> $GITHUB_ENV
-          git checkout $MRTRIX3_VERSION
+
+# echo "MRTRIX3_VERSION=$(git describe --tags --abbrev=0)" >> $GITHUB_ENV
+# git checkout $MRTRIX3_VERSION
 
       - name: configure
         run: |
