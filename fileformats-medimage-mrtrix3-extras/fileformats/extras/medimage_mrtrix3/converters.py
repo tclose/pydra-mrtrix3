@@ -7,9 +7,9 @@ from fileformats.medimage_mrtrix3 import (
 )
 
 try:
-    from pydra.tasks.mrtrix3.utils import MRConvert
+    from pydra.tasks.mrtrix3.utils import MrConvert
 except ImportError:
-    from pydra.tasks.mrtrix3.latest import mrconvert as MRConvert
+    from pydra.tasks.mrtrix3.latest import mrconvert as MrConvert
 
     in_out_file_kwargs = {"in_file": "input", "out_file": "output"}
 else:
@@ -37,7 +37,7 @@ def mrconvert(name, out_ext: str, **kwargs):
     pydra.ShellCommandTask
         the converter task
     """
-    return MRConvert(name=name, out_file="out" + out_ext, **kwargs)
+    return MrConvert(name=name, out_file="out" + out_ext, **kwargs)
 
 
 @hook.converter(
@@ -61,4 +61,4 @@ def mrconvert2(name, out_ext: str, **kwargs):
     pydra.ShellCommandTask
         the converter task
     """
-    return MRConvert(name=name, out_file="out" + out_ext, **kwargs)
+    return MrConvert(name=name, out_file="out" + out_ext, **kwargs)
