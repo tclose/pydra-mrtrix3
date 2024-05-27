@@ -15,6 +15,9 @@ on:
       - master
       - develop
 
+env:
+  MRTRIX3_HOME: /opt/mrtrix3/latest/install
+
 jobs:
 
   generate:
@@ -50,36 +53,43 @@ jobs:
 
       - name: Clone latest MRtrix and switch to latest tag
         run: |
-          git clone https://github.com/tclose/mrtrix3.git
-          cd mrtrix3
+          mkdir /opt/mrtrix3
+          sudo chown -R $USER /opt/mrtrix3
+          git clone https://github.com/tclose/mrtrix3.git /opt/mrtrix3/latest
+          cd /opt/mrtrix3/latest
           git checkout pydra-usage-python-cmd
           echo "MRTRIX3_VERSION=$(git describe --tags --abbrev=0)" >> $GITHUB_ENV
           git checkout $MRTRIX3_VERSION
 
       - name: configure
-        run: >
-          cmake
-          -B build
-          -G Ninja
-          -D CMAKE_BUILD_TYPE=Release
-          -D MRTRIX_BUILD_TESTS=ON
-          -D MRTRIX_STL_DEBUGGING=ON
-          -D MRTRIX_WARNINGS_AS_ERRORS=ON
-          -D CMAKE_C_COMPILER=clang
-          -D CMAKE_CXX_COMPILER=clang++
+        run: |
+          cd /opt/mrtrix3/latest
+          cmake \
+          -B build \
+          -G Ninja \
+          -D CMAKE_BUILD_TYPE=Release \
+          -D MRTRIX_BUILD_TESTS=ON \
+          -D MRTRIX_STL_DEBUGGING=ON \
+          -D MRTRIX_WARNINGS_AS_ERRORS=ON \
+          -D CMAKE_C_COMPILER=clang \
+          -D CMAKE_CXX_COMPILER=clang++ \
           -D CMAKE_INSTALL_PREFIX=$(pwd)/install
 
       - name: Build Mrtrix
-        run: cmake --build build
+        run: |
+          cd /opt/mrtrix3/latest
+          cmake --build build
 
       - name: Install Mrtrix
-        run: cmake --install build
+        run: |
+          cd /opt/mrtrix3/latest
+          cmake --install build
 
       - name: Set PATH Variable
-        run: echo "PATH=$PATH:$(pwd)/install/bin" >> $GITHUB_ENV
+        run: echo "PATH=$PATH:/opt/mrtrix3/latest/install/bin" >> $GITHUB_ENV
 
       - name: Set LD_LIBRARY_PATH Variable
-        run: echo "LD_LIBRARY_PATH=$(pwd)/install/lib" >> $GITHUB_ENV
+        run: echo "LD_LIBRARY_PATH=/opt/mrtrix3/latest/install/lib" >> $GITHUB_ENV
 
       - name: Change back to the root directory
         run: cd ..
@@ -100,7 +110,7 @@ jobs:
       - name: Generate task specifications
         run: >
           .generate.py
-          $(pwd)/mrtrix3/install/bin
+          $/opt/mrtrix3/latest/install/bin
           $(pwd)
           $MRTRIX3_VERSION
           --log-errors
