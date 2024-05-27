@@ -16,7 +16,8 @@ on:
       - develop
 
 env:
-  MRTRIX3_HOME: /opt/mrtrix3/latest/install
+  MRTRIX3_HOME: /opt/mrtrix3
+  MRTRIX3_INSTALL: /opt/mrtrix3/install
   MRTRIX3_VERSION: 3.0.3a2
 
 jobs:
@@ -54,10 +55,10 @@ jobs:
 
       - name: Clone latest MRtrix and switch to latest tag
         run: |
-          mkdir /opt/mrtrix3
-          sudo chown -R $USER /opt/mrtrix3
-          git clone https://github.com/tclose/mrtrix3.git /opt/mrtrix3/src
-          cd /opt/mrtrix3/src
+          mkdir $MRTRIX3_HOME
+          sudo chown -R $USER $MRTRIX3_HOME
+          git clone https://github.com/tclose/mrtrix3.git $MRTRIX3_HOME/src
+          cd $MRTRIX3_HOME/src
           git checkout pydra-usage-python-cmd
 
 # echo "MRTRIX3_VERSION=$(git describe --tags --abbrev=0)" >> $GITHUB_ENV
@@ -65,7 +66,7 @@ jobs:
 
       - name: configure
         run: |
-          cd /opt/mrtrix3/src
+          cd $MRTRIX3_HOME/src
           cmake \
           -B build \
           -G Ninja \
@@ -79,19 +80,19 @@ jobs:
 
       - name: Build Mrtrix
         run: |
-          cd /opt/mrtrix3/src
+          cd $MRTRIX3_HOME/src
           cmake --build build
 
       - name: Install Mrtrix
         run: |
-          cd /opt/mrtrix3/src
+          cd $MRTRIX3_HOME/src
           cmake --install build
 
       - name: Set PATH Variable
-        run: echo "PATH=$PATH:/opt/mrtrix3/install/bin" >> $GITHUB_ENV
+        run: echo "PATH=$PATH:$MRTRIX3_INSTALL/bin" >> $GITHUB_ENV
 
       - name: Set LD_LIBRARY_PATH Variable
-        run: echo "LD_LIBRARY_PATH=/opt/mrtrix3/install/lib" >> $GITHUB_ENV
+        run: echo "LD_LIBRARY_PATH=$MRTRIX3_INSTALL/lib" >> $GITHUB_ENV
 
       - name: Change back to the root directory
         run: cd ..
@@ -112,7 +113,7 @@ jobs:
       - name: Generate task specifications
         run: >
           .generate.py
-          $/opt/mrtrix3/install/bin
+          $MRTRIX3_INSTALL/bin
           $(pwd)
           $MRTRIX3_VERSION
           --log-errors
@@ -122,7 +123,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: MRtrix3
-          path: /opt/mrtrix3/install
+          path: ${{ env.MRTRIX3_INSTALL}}
 
       - name: Upload auto-gen pydra
         uses: actions/upload-artifact@v2
@@ -220,13 +221,13 @@ jobs:
       uses: actions/download-artifact@v2
       with:
         name: MRtrix3
-        path: /opt/mrtrix3/install/
+        path: ${{ env.MRTRIX3_INSTALL}}
 
     - name: Set PATH Variable
-      run: echo "PATH=$PATH:/opt/mrtrix3/install/bin" >> $GITHUB_ENV
+      run: echo "PATH=$PATH:$MRTRIX3_INSTALL/bin" >> $GITHUB_ENV
 
     - name: Set LD_LIBRARY_PATH Variable
-      run: echo "LD_LIBRARY_PATH=/opt/mrtrix3/install/lib" >> $GITHUB_ENV
+      run: echo "LD_LIBRARY_PATH=$MRTRIX3_INSTALL/lib" >> $GITHUB_ENV
 
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v2
@@ -265,6 +266,7 @@ jobs:
 
     - name: Extract Mrtrix version
       run: echo "MRTRIX3_VERSION=$(cat mrtrix3_version.txt)" >> $GITHUB_ENV
+
     - uses: actions/checkout@v2
 
     - name: Download auto-gen pydra
