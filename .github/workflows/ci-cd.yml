@@ -215,7 +215,14 @@ jobs:
       run:
         shell: bash -l {0}
     steps:
-    - uses: actions/checkout@v2
+    - name: Install dependencies
+      run: |
+          sudo apt-get update
+          sudo apt-get install clang qt6-base-dev libglvnd-dev libeigen3-dev zlib1g-dev libfftw3-dev ninja-build
+
+    - name: Checkout code
+      uses: actions/checkout@v2
+
     - name: Download version file
       uses: actions/download-artifact@v2
       with:

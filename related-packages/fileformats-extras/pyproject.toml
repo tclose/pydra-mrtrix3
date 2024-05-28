@@ -10,6 +10,7 @@ requires-python = ">=3.8"
 dependencies = [
     "fileformats >= 0.8",
     "fileformats-medimage-mrtrix3",
+    "medimages4tests",
     "pydra >= 0.22.0",
 ]
 license = { file = "LICENSE" }
@@ -34,13 +35,7 @@ dynamic = ["version"]
 
 [project.optional-dependencies]
 dev = ["black", "pre-commit", "codespell", "flake8", "flake8-pyproject"]
-test = [
-    "pytest >=6.2.5",
-    "pytest-env>=0.6.2",
-    "pytest-cov>=2.12.1",
-    "medimages4tests",
-    "codecov",
-]
+test = ["pytest >=6.2.5", "pytest-env>=0.6.2", "pytest-cov>=2.12.1", "codecov"]
 
 converters = []
 

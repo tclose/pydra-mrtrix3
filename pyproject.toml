@@ -50,6 +50,7 @@ test = [
     "pytest-xdist",
     "pytest-rerunfailures",
     "codecov",
+    "fileformats-medimage_mrtrix3-extras",
 ]
 
 [tool.hatch.version]
