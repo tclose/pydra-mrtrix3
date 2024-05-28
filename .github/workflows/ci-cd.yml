@@ -253,6 +253,70 @@ jobs:
     - uses: codecov/codecov-action@v1
       if: ${{ always() }}
 
+  deploy-fileformats:
+    needs: [devcheck, test]
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        submodules: recursive
+        fetch-depth: 0
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    - name: Install build tools
+      run: python -m pip install build twine
+    - name: Build source and wheel distributions
+      run: python -m build ./related-packages/fileformats
+    - name: Check distributions
+      run: twine check ./related-packages/fileformats/dist/*
+    - name: Check for PyPI token on tag
+      id: deployable
+      if: github.event_name == 'release'
+      env:
+        PYPI_API_TOKEN: "${{ secrets.PYPI_FILEFORMATS_API_TOKEN }}"
+      run: if [ -n "$PYPI_API_TOKEN" ]; then echo "DEPLOY=true" >> $GITHUB_OUTPUT; fi
+    - name: Upload to PyPI
+      if: steps.deployable.outputs.DEPLOY
+      uses: pypa/gh-action-pypi-publish@release/v1
+      with:
+        user: __token__
+        password: ${{ secrets.PYPI_FILEFORMATS_API_TOKEN }}
+        packages-dir: ./related-packages/fileformats/dist
+
+  deploy-fileformats-extras:
+    needs: [deploy-fileformats]
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        submodules: recursive
+        fetch-depth: 0
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    - name: Install build tools
+      run: python -m pip install build twine
+    - name: Build source and wheel distributions
+      run: python -m build ./related-packages/fileformats-extras
+    - name: Check distributions
+      run: twine check ./related-packages/fileformats-extras/dist/*
+    - name: Check for PyPI token on tag
+      id: deployable
+      if: github.event_name == 'release'
+      env:
+        PYPI_API_TOKEN: "${{ secrets.PYPI_FILEFORMATS_EXTRAS_API_TOKEN }}"
+      run: if [ -n "$PYPI_API_TOKEN" ]; then echo "DEPLOY=true" >> $GITHUB_OUTPUT; fi
+    - name: Upload to PyPI
+      if: steps.deployable.outputs.DEPLOY
+      uses: pypa/gh-action-pypi-publish@release/v1
+      with:
+        user: __token__
+        password: ${{ secrets.PYPI_FILEFORMATS_EXTRAS_API_TOKEN }}
+        packages-dir: ./related-packages/fileformats-extras/dist
+
 
   deploy:
     needs: [devcheck, test]
