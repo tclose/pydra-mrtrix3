@@ -19,6 +19,7 @@ env:
   MRTRIX_HOME: /opt/mrtrix3
   MRTRIX_INSTALL: /opt/mrtrix3/install
   MRTRIX_VERSION: 3.0.4
+  SUBPKG_NAME: v3_0
 
 jobs:
 
@@ -138,7 +139,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: AutoGen
-          path: pydra/tasks/mrtrix3/v3_0
+          path: pydra/tasks/mrtrix3/${{ env.SUBPKG_NAME }}
 
       - name: Write version file
         run: echo $MRTRIX_VERSION > mrtrix3_version.txt
@@ -176,7 +177,11 @@ jobs:
       uses: actions/download-artifact@v2
       with:
         name: AutoGen
-        path: pydra/tasks/mrtrix3/v3_0
+        path: pydra/tasks/mrtrix3/${{ env.SUBPKG_NAME }}
+
+    - name: Strip auto package from gitignore so it is included in package
+      run: |
+        sed -i '/\/pydra\/tasks\/mrtrix3\/${{ env.SUBPKG_NAME }}/d' .gitignore
 
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v2
@@ -197,7 +202,7 @@ jobs:
         pip install ${{ matrix.pip-flags }} "related-packages/fileformats"
         pip install ${{ matrix.pip-flags }} ".[dev]"
         python -c "import pydra.tasks.mrtrix3 as m; print(f'{m.__name__} {m.__version__} @ {m.__file__}')"
-        python -c "import pydra.tasks.mrtrix3.v3_0"
+        python -c "import pydra.tasks.mrtrix3.$SUBPKG_NAME"
         python -c "import pydra as m; print(f'{m.__name__} {m.__version__} @ {m.__file__}')"
 
   test:
@@ -224,7 +229,11 @@ jobs:
       uses: actions/download-artifact@v2
       with:
         name: AutoGen
-        path: pydra/tasks/mrtrix3/v3_0
+        path: pydra/tasks/mrtrix3/${{ env.SUBPKG_NAME }}
+
+    - name: Strip auto package from gitignore so it is included in package
+      run: |
+        sed -i '/\/pydra\/tasks\/mrtrix3\/${{ env.SUBPKG_NAME }}/d' .gitignore
 
     - name: Download MRtrix3 install
       uses: actions/download-artifact@v2
@@ -249,7 +258,7 @@ jobs:
 
     - name: Install task package
       run: |
-        pip install .fileformats-medimage-mrtrix ./fileformats-medimage-mrtrix-extras '.[test]'
+        pip install -e .fileformats-medimage-mrtrix -e ./fileformats-medimage-mrtrix-extras -e '.[test]'
         python -c "import pydra.tasks.mrtrix3 as m; print(f'{m.__name__} {m.__version__} @ {m.__file__}')"
         python -c "import pydra as m; print(f'{m.__name__} {m.__version__} @ {m.__file__}')"
 
@@ -346,7 +355,11 @@ jobs:
       uses: actions/download-artifact@v2
       with:
         name: AutoGen
-        path: pydra/tasks/mrtrix3/v3_0
+        path: pydra/tasks/mrtrix3/${{ env.SUBPKG_NAME }}
+
+    - name: Strip auto package from gitignore so it is included in package
+      run: |
+        sed -i '/\/pydra\/tasks\/mrtrix3\/${{ env.SUBPKG_NAME }}/d' .gitignore
 
     - name: Set up Python $PYTHON_VERSION
       uses: actions/setup-python@v2
