@@ -257,8 +257,11 @@ jobs:
         python -m pip install --upgrade pip
 
     - name: Install task package
-      run: |
-        pip install -e .fileformats-medimage-mrtrix -e ./fileformats-medimage-mrtrix-extras -e '.[test]'
+      run: >
+        pip install
+        -e ./related-packagse/fileformats
+        -e ./related-packages/fileformats-extras
+        -e '.[test]'
 
     - name: Test with pytest
       run: |
