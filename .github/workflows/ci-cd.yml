@@ -259,8 +259,6 @@ jobs:
     - name: Install task package
       run: |
         pip install -e .fileformats-medimage-mrtrix -e ./fileformats-medimage-mrtrix-extras -e '.[test]'
-        python -c "import pydra.tasks.mrtrix3 as m; print(f'{m.__name__} {m.__version__} @ {m.__file__}')"
-        python -c "import pydra as m; print(f'{m.__name__} {m.__version__} @ {m.__file__}')"
 
     - name: Test with pytest
       run: |
@@ -335,7 +333,7 @@ jobs:
 
 
   deploy:
-    needs: [devcheck, test]
+    needs: [devcheck, test, deploy-fileformats, deploy-fileformats-extras]
     runs-on: ubuntu-latest
     env:
       PYTHON_VERSION: 3.11

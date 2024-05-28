@@ -8,7 +8,7 @@ description = "pydra-mrtrix3 contains Pydra task specifications for MRtrix3 tool
 readme = "README.rst"
 requires-python = ">=3.8"
 dependencies = [
-    "pydra >=0.22",
+    "pydra >=0.23",
     "fileformats-medimage_mrtrix3",
     "pytest",
 ] # bug in fileformats requires this currently
