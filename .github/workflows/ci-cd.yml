@@ -18,7 +18,7 @@ on:
 env:
   MRTRIX3_HOME: /opt/mrtrix3
   MRTRIX3_INSTALL: /opt/mrtrix3/install
-  MRTRIX3_VERSION: 3.0.3a2
+  MRTRIX3_VERSION: 3.0.4
 
 jobs:
 
