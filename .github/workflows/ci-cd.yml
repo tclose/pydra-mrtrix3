@@ -241,6 +241,9 @@ jobs:
         name: MRtrix3
         path: ${{ env.MRTRIX_INSTALL}}
 
+    - name: Make commands executable
+      run: chmod +x ${{ env.MRTRIX_INSTALL }}/bin/*
+
     - name: Set PATH Variable
       run: echo "PATH=$PATH:$MRTRIX_INSTALL/bin" >> $GITHUB_ENV
 
