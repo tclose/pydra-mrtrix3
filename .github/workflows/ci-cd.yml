@@ -121,7 +121,7 @@ jobs:
 
       - name: Generate task specifications
         run: >
-          .generate.py
+          ./generate.py
           $MRTRIX_INSTALL/bin
           $(pwd)
           $MRTRIX_VERSION
