@@ -60,6 +60,7 @@ jobs:
           git clone https://github.com/tclose/mrtrix3.git $MRTRIX_HOME/src
           cd $MRTRIX_HOME/src
           git checkout pydra-usage-python-cmd
+          git tag -d $(git tag)
           git tag $MRTRIX_VERSION
           git describe --abbrev=0
 
