@@ -113,10 +113,11 @@ jobs:
           python -m pip install --upgrade pip
 
       - name: Install pydra-auto-gen requirements
-        run: |
-          pip install -e fileformats-medimage-mrtrix3
-          pip install -e fileformats-medimage-mrtrix3-extras
-          pip install -e .[dev,test]
+        run: >
+          pip install
+          -e related-packages/fileformats
+          -e related-packages/fileformats-extras
+          -e .[dev,test]
 
       - name: Generate task specifications
         run: >
@@ -193,7 +194,7 @@ jobs:
 
     - name: Install task package
       run: |
-        pip install ${{ matrix.pip-flags }} "fileformats-medimage-mrtrix3"
+        pip install ${{ matrix.pip-flags }} "related-packages/fileformats"
         pip install ${{ matrix.pip-flags }} ".[dev]"
         python -c "import pydra.tasks.mrtrix3 as m; print(f'{m.__name__} {m.__version__} @ {m.__file__}')"
         python -c "import pydra.tasks.mrtrix3.v3_0"
