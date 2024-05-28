@@ -7,7 +7,7 @@ from fileformats.medimage_mrtrix3 import (
 )
 
 try:
-    from pydra.tasks.mrtrix3.utils import MrConvert
+    from pydra.tasks.mrtrix3.v3_0 import MrConvert
 except ImportError:
     from pydra.tasks.mrtrix3.latest import mrconvert as MrConvert
 
