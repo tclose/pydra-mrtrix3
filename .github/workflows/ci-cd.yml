@@ -259,7 +259,7 @@ jobs:
     - name: Install task package
       run: >
         pip install
-        -e ./related-packagse/fileformats
+        -e ./related-packages/fileformats
         -e ./related-packages/fileformats-extras
         -e '.[test]'
 
