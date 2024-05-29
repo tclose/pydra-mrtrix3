@@ -350,8 +350,6 @@ jobs:
   deploy:
     needs: [devcheck, test, deploy-fileformats, deploy-fileformats-extras]
     runs-on: ubuntu-latest
-    env:
-      PYTHON_VERSION: 3.11
     steps:
     - name: Download version file
       uses: actions/download-artifact@v2
@@ -374,10 +372,10 @@ jobs:
       run: |
         sed -i '/\/pydra\/tasks\/mrtrix3\/${{ env.SUBPKG_NAME }}/d' .gitignore
 
-    - name: Set up Python $PYTHON_VERSION
+    - name: Set up Python 3.11
       uses: actions/setup-python@v2
       with:
-        python-version: $PYTHON_VERSION
+        python-version: 3.11
 
     - name: Install build tools
       run: python -m pip install --upgrade pip twine build
