@@ -133,3 +133,8 @@ dmypy.json
 
 # VS Code
 .vscode/
+
+# Hatchling
+_version.py
+
+/pydra/tasks/mrtrix3/v3_0
