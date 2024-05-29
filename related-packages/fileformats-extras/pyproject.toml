@@ -9,9 +9,9 @@ readme = "README.rst"
 requires-python = ">=3.8"
 dependencies = [
     "fileformats >= 0.8",
-    "fileformats-medimage-mrtrix3",
+    "fileformats-medimage-mrtrix3 >=3.0.4a4",
     "medimages4tests",
-    "pydra >= 0.22.0",
+    "pydra >= 0.23.0",
 ]
 license = { file = "LICENSE" }
 authors = [{ name = "Thomas G. Close", email = "tom.g.close@gmail.com" }]
