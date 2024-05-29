@@ -352,6 +352,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
+    - name: Checkout repo
+      uses: actions/checkout@v2
+
     - name: Set up Git user
       run: |
         git config --local user.email "action@github.com"
@@ -365,8 +368,6 @@ jobs:
 
     - name: Extract Mrtrix version
       run: echo "MRTRIX_VERSION=$(cat mrtrix3_version.txt)" >> $GITHUB_ENV
-
-    - uses: actions/checkout@v2
 
     - name: Download auto-gen pydra
       uses: actions/download-artifact@v2
