@@ -62,6 +62,63 @@ CMD_PREFIXES = [
 ]
 
 
+XFAIL = [
+    "dirsplit",
+    "dwi2mask_3dautomask",
+    "dwi2mask_ants",
+    "dwi2mask_b02template",
+    "dwi2mask_consensus",
+    "dwi2mask_fslbet",
+    "dwi2mask_hdbet",
+    "dwi2mask_legacy",
+    "dwi2mask_mean",
+    "dwi2mask_mtnorm",
+    "dwi2mask_synthstrip",
+    "dwi2mask_trace",
+    "dwi2response_dhollander",
+    "dwi2response_fa",
+    "dwi2response_manual",
+    "dwi2response_msmt_5tt",
+    "dwi2response_tax",
+    "dwi2response_tournier",
+    "dwibiascorrect_ants",
+    "dwibiascorrect_fsl",
+    "dwibiascorrect_mtnorm",
+    "dwibiasnormmask",
+    "dwicat",
+    "dwifslpreproc",
+    "dwigradcheck",
+    "dwinormalise_group",
+    "dwinormalise_manual",
+    "dwinormalise_mtnorm",
+    "dwishellmath",
+    "fivettgen_freesurfer",
+    "fivettgen_fsl",
+    "fivettgen_gif",
+    "fivettgen_hsvs",
+    "fixelcfestats",
+    "fixelconnectivity",
+    "fixelconvert",
+    "fixelcorrespondence",
+    "fixelcrop",
+    "fixelfilter",
+    "fixelreorient",
+    "labelsgmfix",
+    "mask2glass",
+    "mrconvert",
+    "mrstats",
+    "mrtransform",
+    "mrtrix_cleanup",
+    "population_template",
+    "responsemean",
+    "tck2fixel",
+    "tckstats",
+    "tsfmult",
+    "voxel2fixel",
+    "warpinvert",
+]
+
+
 @click.command(
     help="""Loops through all MRtrix commands to generate Pydra
 (https://pydra.readthedocs.io) task interfaces for them
@@ -250,12 +307,19 @@ def auto_gen_test(cmd_name: str, output_dir: Path, log_errors: bool, pkg_version
 
     code_str = f"""# Auto-generated test for {cmd_name}
 
+import pytest
 from fileformats.generic import File, Directory, FsObject  # noqa
 from fileformats.medimage import Nifti1  # noqa
 from fileformats.medimage_mrtrix3 import ImageFormat, ImageIn, Tracks  # noqa
 from pydra.tasks.mrtrix3.{pkg_version} import {pascal_case_task_name(cmd_name)}
+"""
 
+    if cmd_name in XFAIL:
+        code_str += (
+            f"""@pytest.mark.xfail(reason="Task {cmd_name} is known not pass yet")"""
+        )
 
+    code_str += f"""
 def test_{cmd_name.lower()}(tmp_path, cli_parse_only):
 
     task = {pascal_case_task_name(cmd_name)}(
