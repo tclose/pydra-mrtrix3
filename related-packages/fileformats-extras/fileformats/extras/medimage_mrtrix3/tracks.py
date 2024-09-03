@@ -3,11 +3,11 @@ import struct
 import math
 from pathlib import Path
 import typing as ty
-from fileformats.core import FileSet, SampleFileGenerator
+from fileformats.core import FileSet, SampleFileGenerator, extra_implementation
 from fileformats.medimage_mrtrix3 import Tracks
 
 
-@FileSet.generate_sample_data.register
+@extra_implementation(FileSet.generate_sample_data)
 def generate_tracks_sample_data(
     tracks: Tracks,
     generator: SampleFileGenerator,

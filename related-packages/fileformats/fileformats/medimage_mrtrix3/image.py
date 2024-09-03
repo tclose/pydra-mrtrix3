@@ -1,6 +1,4 @@
-import typing as ty
 from pathlib import Path
-from fileformats.core import hook
 from fileformats.generic import File
 from fileformats.application import Gzip
 from fileformats.core.mixin import WithMagicNumber
@@ -81,8 +79,9 @@ class BaseMrtrixImage(WithMagicNumber, fileformats.medimage.MedicalImage, File):
 class ImageFormat(BaseMrtrixImage):
 
     ext = ".mif"
+    iana_mime = "application/x-mrtrix-image-format"
 
-    @hook.check
+    @property
     def check_data_file(self):
         if self.data_fspath != self.fspath:
             raise FormatMismatchError(
@@ -97,15 +96,15 @@ class ImageFormat(BaseMrtrixImage):
 
 class ImageFormatGz(Gzip[ImageFormat]):
 
-    iana_mime = "application/x-image-format-gz"
+    iana_mime = "application/x-mrtrix-image-format-gz"
     ext = ".mif.gz"
 
 
 class ImageHeader(BaseMrtrixImage):
 
     ext = ".mih"
+    iana_mime = "application/x-mrtrix-image-header"
 
-    @hook.required
     @property
     def data_file(self):
         return ImageDataFile(self.data_fspath)

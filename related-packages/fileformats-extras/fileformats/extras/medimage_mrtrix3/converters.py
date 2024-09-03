@@ -1,4 +1,4 @@
-from fileformats.core import hook
+from fileformats.core import converter
 from fileformats.medimage.base import MedicalImage
 
 from fileformats.medimage_mrtrix3 import (
@@ -16,7 +16,7 @@ else:
     in_out_file_kwargs = {}
 
 
-@hook.converter(
+@converter(
     source_format=MedicalImage,
     target_format=MrtrixImage,
     out_ext=MrtrixImage.ext,
@@ -40,7 +40,7 @@ def mrconvert(name, out_ext: str, **kwargs):
     return MrConvert(name=name, out_file="out" + out_ext, **kwargs)
 
 
-@hook.converter(
+@converter(
     source_format=MedicalImage,
     target_format=MrtrixImageHeader,
     out_ext=MrtrixImageHeader.ext,
