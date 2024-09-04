@@ -13,7 +13,7 @@ from fileformats.medimage_mrtrix3 import ImageFormat
 def generate_mrtrix_sample_data(
     mif: ImageFormat,
     generator: SampleFileGenerator,
-) -> ty.Iterable[Path]:
+) -> ty.List[Path]:
     nifti = Nifti1(get_dummy_nifti(generator.dest_dir / "nifti.nii"))
     with mock.patch.dict(os.environ, {"MRTRIX_CLI_PARSE_ONLY": "0"}):
         mif = ImageFormat.convert(nifti)

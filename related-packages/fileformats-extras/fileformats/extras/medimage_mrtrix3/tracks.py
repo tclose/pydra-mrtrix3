@@ -11,7 +11,7 @@ from fileformats.medimage_mrtrix3 import Tracks
 def generate_tracks_sample_data(
     tracks: Tracks,
     generator: SampleFileGenerator,
-) -> ty.Iterable[Path]:
+) -> ty.List[Path]:
     """Generate a tracks file with a single straight track of length 10"""
     fspath = generator.dest_dir / "tracks.tck"
     timestamp = str(time.time() * 1e9 + time.process_time_ns())

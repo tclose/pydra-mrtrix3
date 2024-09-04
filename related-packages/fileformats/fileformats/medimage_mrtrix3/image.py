@@ -65,7 +65,9 @@ class BaseMrtrixImage(WithMagicNumber, fileformats.medimage.MedicalImage, File):
 
     @property
     def data_offset(self):
-        return int(self.metadata["file"].split()[1])
+        fspath_and_offset = self.metadata["file"].split()
+        assert len(fspath_and_offset) <= 2
+        return int(fspath_and_offset[1]) if len(fspath_and_offset) > 1 else 0
 
     @property
     def vox_sizes(self):
