@@ -90,7 +90,7 @@ class ImageDataFile(File):
 
 @extra_implementation(FileSet.read_metadata)
 def mrtrix_read_metadata(
-    mif: BaseMrtrixImage, selected_keys: ty.Optional[ty.Sequence[str]] = None
+    mif: BaseMrtrixImage, selected_keys: ty.Optional[ty.Collection[str]] = None
 ) -> ty.Mapping[str, ty.Any]:
     metadata = {}
     with open(mif.fspath, "rb") as f:
