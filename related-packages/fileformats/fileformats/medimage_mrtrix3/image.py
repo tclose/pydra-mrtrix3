@@ -1,4 +1,6 @@
 from pathlib import Path
+import typing as ty
+from fileformats.core import FileSet, extra_implementation
 from fileformats.generic import File
 from fileformats.application import Gzip
 from fileformats.core.mixin import WithMagicNumber
@@ -14,43 +16,6 @@ class BaseMrtrixImage(WithMagicNumber, fileformats.medimage.MedicalImage, File):
 
     magic_number = b"mrtrix image\n"
     binary = True
-
-    def read_metadata(self):
-        metadata = {}
-        with open(self.fspath, "rb") as f:
-            line = f.readline()
-            if line != self.magic_number:
-                raise FormatMismatchError(
-                    f"Magic line {line} doesn't match reference {self.magic_number}"
-                )
-            line = f.readline().decode("utf-8")
-            while line and line != "END\n":
-                key, value = line.split(": ", maxsplit=1)
-                if "," in value:
-                    try:
-                        value = [int(v) for v in value.split(",")]
-                    except ValueError:
-                        try:
-                            value = [float(v) for v in value.split(",")]
-                        except ValueError:
-                            pass
-                else:
-                    try:
-                        value = int(value)
-                    except ValueError:
-                        try:
-                            value = float(value)
-                        except ValueError:
-                            pass
-                if key in metadata:
-                    if isinstance(metadata[key], MultiLineMetadataValue):
-                        metadata[key].append(value)
-                    else:
-                        metadata[key] = MultiLineMetadataValue([metadata[key], value])
-                else:
-                    metadata[key] = value
-                line = f.readline().decode("utf-8")
-        return metadata
 
     @property
     def data_fspath(self):
@@ -121,3 +86,46 @@ class ImageHeader(BaseMrtrixImage):
 class ImageDataFile(File):
 
     ext = ".dat"
+
+
+@extra_implementation(FileSet.read_metadata)
+def mrtrix_read_metadata(
+    mif: BaseMrtrixImage, selected_keys: ty.Optional[ty.Sequence[str]] = None
+) -> ty.Mapping[str, ty.Any]:
+    metadata = {}
+    with open(mif.fspath, "rb") as f:
+        line = f.readline()
+        if line != mif.magic_number:
+            raise FormatMismatchError(
+                f"Magic line {line} doesn't match reference {mif.magic_number}"
+            )
+        line = f.readline().decode("utf-8")
+        while line and line != "END\n":
+            key, value = line.split(": ", maxsplit=1)
+            if "," in value:
+                try:
+                    value = [int(v) for v in value.split(",")]
+                except ValueError:
+                    try:
+                        value = [float(v) for v in value.split(",")]
+                    except ValueError:
+                        pass
+            else:
+                try:
+                    value = int(value)
+                except ValueError:
+                    try:
+                        value = float(value)
+                    except ValueError:
+                        pass
+            if key in metadata:
+                if isinstance(metadata[key], MultiLineMetadataValue):
+                    metadata[key].append(value)
+                else:
+                    metadata[key] = MultiLineMetadataValue([metadata[key], value])
+            else:
+                metadata[key] = value
+            line = f.readline().decode("utf-8")
+    if selected_keys:
+        metadata = {k: v for k, v in metadata.items() if k in selected_keys}
+    return metadata
