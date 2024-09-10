@@ -10,15 +10,15 @@ from fileformats.core import FileSet, SampleFileGenerator, extra_implementation
 from fileformats.medimage import MedicalImage, Nifti1
 from fileformats.medimage_mrtrix3 import ImageFormat
 
-if sys.version_info >= (3, 9):
-    from typing import TypeAlias
-else:
-    from typing_extensions import TypeAlias
+# if sys.version_info >= (3, 9):
+#     from typing import TypeAlias
+# else:
+#     from typing_extensions import TypeAlias
 
 
-DataArrayType: TypeAlias = (
-    "numpy.typing.NDArray[ty.Union[np.floating[ty.Any], np.integer[ty.Any]]]"
-)
+# DataArrayType: TypeAlias = (
+#     "numpy.typing.NDArray[ty.Union[np.floating[ty.Any], np.integer[ty.Any]]]"
+# )
 
 
 @extra_implementation(FileSet.generate_sample_data)
@@ -32,12 +32,12 @@ def generate_mrtrix_sample_data(
     return mif.fspaths
 
 
-@extra_implementation(MedicalImage.read_array)
-def mrtrix_read_array(mif: ImageFormat) -> DataArrayType:
-    raise NotImplementedError(
-        "Need to work out how to use the metadata to read the array in the correct order"
-    )
-    data = mif.read_contents(offset=mif.data_offset)
-    array = np.asarray(data)
-    data_array = array.reshape(mif.dims)
-    return data_array
+# @extra_implementation(MedicalImage.read_array)
+# def mrtrix_read_array(mif: ImageFormat) -> DataArrayType:
+#     raise NotImplementedError(
+#         "Need to work out how to use the metadata to read the array in the correct order"
+#     )
+#     data = mif.read_contents(offset=mif.data_offset)
+#     array = np.asarray(data)
+#     data_array = array.reshape(mif.dims)
+#     return data_array
