@@ -13,3 +13,23 @@ from .dwi import (
     ImageHeaderB,
 )
 from .track import Tracks
+
+
+__all__ = [
+    "__version__",
+    "ImageIn",
+    "ImageOut",
+    "BFile",
+    "Tracks",
+    "NiftiB",
+    "NiftiGzB",
+    "NiftiGzXB",
+    "NiftiXB",
+    "ImageFormatB",
+    "ImageFormatGzB",
+    "ImageHeaderB",
+    "ImageFormat",
+    "ImageFormatGz",
+    "ImageHeader",
+    "ImageDataFile",
+]

@@ -2,7 +2,7 @@ from pathlib import Path
 import typing as ty
 from fileformats.core import FileSet, extra_implementation
 from fileformats.generic import File
-from fileformats.application import Gzip
+from fileformats.application.archive import BaseGzip
 from fileformats.core.mixin import WithMagicNumber
 from fileformats.core.exceptions import FormatMismatchError
 import fileformats.medimage
@@ -61,8 +61,9 @@ class ImageFormat(BaseMrtrixImage):
         return self
 
 
-class ImageFormatGz(Gzip[ImageFormat]):
+class ImageFormatGz(fileformats.medimage.MedicalImage, BaseGzip):
 
+    archived_type = ImageFormat
     iana_mime = "application/x-mrtrix-image-format-gz"
     ext = ".mif.gz"
 

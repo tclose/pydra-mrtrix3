@@ -1,3 +1,4 @@
+import sys
 import typing as ty
 from fileformats.application import Dicom
 from fileformats.medimage import (
@@ -10,6 +11,10 @@ from fileformats.medimage import (
     Mgh,
     MghGz,
     Analyze,
+    NiftiBvec,
+    NiftiGzBvec,
+    NiftiXBvec,
+    NiftiGzXBvec,
 )
 from .image import ImageFormat, ImageHeader, ImageFormatGz
 from .dwi import (
@@ -22,8 +27,13 @@ from .dwi import (
     ImageHeaderB,
 )
 
+if sys.version_info >= (3, 9):
+    from typing import TypeAlias
+else:
+    from typing_extensions import TypeAlias
 
-ImageIn = ty.Union[
+
+ImageIn: TypeAlias = ty.Union[
     ImageFormat,
     ImageFormatGz,
     ImageHeader,
@@ -37,12 +47,16 @@ ImageIn = ty.Union[
     NiftiX,
     Nifti1,
     Nifti2,
+    NiftiB,
+    NiftiGzB,
+    NiftiGzXB,
+    NiftiXB,
     Mgh,
     MghGz,
     Analyze,
 ]
 
-ImageOut = ty.Union[
+ImageOut: TypeAlias = ty.Union[
     ImageFormat,
     ImageFormatGz,
     ImageHeader,
@@ -54,6 +68,14 @@ ImageOut = ty.Union[
     NiftiX,
     Nifti1,
     Nifti2,
+    NiftiB,
+    NiftiGzB,
+    NiftiGzXB,
+    NiftiXB,
+    NiftiBvec,
+    NiftiGzBvec,
+    NiftiXBvec,
+    NiftiGzXBvec,
     Mgh,
     MghGz,
     Analyze,
