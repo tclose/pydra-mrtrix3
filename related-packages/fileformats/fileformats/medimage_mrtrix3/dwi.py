@@ -1,4 +1,3 @@
-from fileformats.core import hook
 from fileformats.core.mixin import WithAdjacentFiles
 from fileformats.medimage import DwiEncoding, Nifti1, NiftiGz, NiftiX, NiftiGzX
 from .image import ImageFormat, ImageHeader, ImageFormatGz
@@ -12,7 +11,6 @@ class BFile(DwiEncoding):
 
 # NIfTI file format gzipped with BIDS side car
 class WithBFile(WithAdjacentFiles):
-    @hook.required
     @property
     def encoding(self) -> BFile:
         return BFile(self.select_by_ext(BFile))
@@ -35,12 +33,12 @@ class NiftiGzXB(WithBFile, NiftiGzX):
 
 
 class ImageFormatB(WithBFile, ImageFormat):
-    pass
+    iana_mime = "application/x-mrtrix-image-format.b"
 
 
 class ImageFormatGzB(WithBFile, ImageFormatGz):
-    pass
+    iana_mime = "application/x-mrtrix-image-format+gzip.b"
 
 
 class ImageHeaderB(WithBFile, ImageHeader):
-    pass
+    iana_mime = "application/x-mrtrix-image-header.b"

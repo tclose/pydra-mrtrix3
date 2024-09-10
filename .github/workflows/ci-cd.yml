@@ -45,23 +45,18 @@ jobs:
         run: |
           git config --global user.email "dummy@email.com"
           git config --global user.name "Dummy User"
-
       - name: install dependencies
         run: |
            sudo apt-get update
            sudo apt-get install clang qt6-base-dev libglvnd-dev libeigen3-dev zlib1g-dev libfftw3-dev ninja-build
-
       - name: Run sccache-cache
         uses: mozilla-actions/sccache-action@v0.0.3
-
       - name: Get CMake
         uses: lukka/get-cmake@latest
         with:
           cmakeVersion: '3.16.3'
-
       - name: Print CMake version
         run: cmake --version
-
       - name: Clone latest MRtrix and switch to latest tag
         run: |
           mkdir $MRTRIX_HOME
@@ -71,10 +66,8 @@ jobs:
           git checkout pydra-usage-python-cmd
           git tag -a $MRTRIX_VERSION -m"Tag used to create a pydra-mrtrix3 release"
           git describe --abbrev=0
-
 # echo "MRTRIX_VERSION=$(git describe --tags --abbrev=0)" >> $GITHUB_ENV
 # git checkout $MRTRIX_VERSION
-
       - name: configure
         run: |
           cd $MRTRIX_HOME/src
@@ -88,40 +81,31 @@ jobs:
           -D CMAKE_C_COMPILER=clang \
           -D CMAKE_CXX_COMPILER=clang++ \
           -D CMAKE_INSTALL_PREFIX=$MRTRIX_INSTALL
-
       - name: Build Mrtrix
         run: |
           cd $MRTRIX_HOME/src
           cmake --build build
-
       - name: Install Mrtrix
         run: |
           cd $MRTRIX_HOME/src
           cmake --install build
-
       - name: Set PATH Variable
         run: echo "PATH=$PATH:$MRTRIX_INSTALL/bin" >> $GITHUB_ENV
-
       - name: Set LD_LIBRARY_PATH Variable
         run: echo "LD_LIBRARY_PATH=$MRTRIX_INSTALL/lib" >> $GITHUB_ENV
-
       - name: Change back to the root directory
         run: cd ..
-
       - name: Set up Python
         uses: actions/setup-python@v2
-
       - name: Install Python build dependencies
         run: |
           python -m pip install --upgrade pip
-
       - name: Install pydra-auto-gen requirements
         run: >
           pip install
           -e related-packages/fileformats
           -e related-packages/fileformats-extras
           -e .[dev,test]
-
       - name: Generate task specifications
         run: >
           ./generate.py
@@ -130,22 +114,18 @@ jobs:
           $MRTRIX_VERSION
           --log-errors
           --latest
-
       - name: Upload MRtrix3 install
         uses: actions/upload-artifact@v2
         with:
           name: MRtrix3
           path: ${{ env.MRTRIX_INSTALL}}
-
       - name: Upload auto-gen pydra
         uses: actions/upload-artifact@v2
         with:
           name: AutoGen
           path: pydra/tasks/mrtrix3/${{ env.SUBPKG_NAME }}
-
       - name: Write version file
         run: echo $MRTRIX_VERSION > mrtrix3_version.txt
-
       - name: Upload version file
         uses: actions/upload-artifact@v2
         with:
@@ -165,40 +145,32 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-
     - name: Download version file
       uses: actions/download-artifact@v2
       with:
         name: VersionFile
         path: mrtrix3_version.txt
-
     - name: Extract Mrtrix version
       run: echo "MRTRIX_VERSION=$(cat mrtrix3_version.txt)" >> $GITHUB_ENV
-
     - name: Download auto-gen pydra
       uses: actions/download-artifact@v2
       with:
         name: AutoGen
         path: pydra/tasks/mrtrix3/${{ env.SUBPKG_NAME }}
-
     - name: Strip auto package from gitignore so it is included in package
       run: |
         sed -i '/\/pydra\/tasks\/mrtrix3\/${{ env.SUBPKG_NAME }}/d' .gitignore
-
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v2
       with:
         python-version: ${{ matrix.python-version }}
-
     - name: Install build dependencies
       run: |
         python -m pip install --upgrade pip
-
     - name: Install Pydra
       run: |
         pip install ${{ matrix.pydra }}
         python -c "import pydra as m; print(f'{m.__name__} {m.__version__} @ {m.__file__}')"
-
     - name: Install task package
       run: |
         pip install ${{ matrix.pip-flags }} "related-packages/fileformats"
@@ -221,66 +193,55 @@ jobs:
       run: |
           sudo apt-get update
           sudo apt-get install clang qt6-base-dev libglvnd-dev libeigen3-dev zlib1g-dev libfftw3-dev ninja-build
-
     - name: Checkout code
       uses: actions/checkout@v2
-
+    - name: Unset header
+      # checkout@v2 adds a header that makes branch protection report errors
+      # because the Github action bot is not a collaborator on the repo
+      run: git config --local --unset http.https://github.com/.extraheader
+    - name: Fetch tags
+      run: git fetch --prune --unshallow
     - name: Download version file
       uses: actions/download-artifact@v2
       with:
         name: VersionFile
         path: mrtrix3_version.txt
-
     - name: Extract Mrtrix version
       run: echo "MRTRIX_VERSION=$(cat mrtrix3_version.txt)" >> $GITHUB_ENV
-
     - name: Download auto-gen pydra
       uses: actions/download-artifact@v2
       with:
         name: AutoGen
         path: pydra/tasks/mrtrix3/${{ env.SUBPKG_NAME }}
-
     - name: Strip auto package from gitignore so it is included in package
       run: |
         sed -i '/\/pydra\/tasks\/mrtrix3\/${{ env.SUBPKG_NAME }}/d' .gitignore
-
     - name: Download MRtrix3 install
       uses: actions/download-artifact@v2
       with:
         name: MRtrix3
         path: ${{ env.MRTRIX_INSTALL}}
-
     - name: Make commands executable
       run: chmod +x ${{ env.MRTRIX_INSTALL }}/bin/*
-
     - name: Set PATH Variable
       run: echo "PATH=$PATH:$MRTRIX_INSTALL/bin" >> $GITHUB_ENV
-
     - name: Set LD_LIBRARY_PATH Variable
       run: echo "LD_LIBRARY_PATH=$MRTRIX_INSTALL/lib" >> $GITHUB_ENV
-
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v2
       with:
         python-version: ${{ matrix.python-version }}
-
     - name: Install build dependencies
       run: |
         python -m pip install --upgrade pip
-
     - name: Install task package
       run: >
         pip install
         -e ./related-packages/fileformats
         -e ./related-packages/fileformats-extras
         -e '.[test]'
-
-    - name: Install dev branch of pydra until bugfix
-      run: pip install --upgrade git+https://github.com/nipype/pydra.git@typing-bugfixes
-
     - name: Test with pytest
       run: pytest -sv pydra/tasks/mrtrix3 --cov pydra.tasks.mrtrix3 --cov-report xml
-
     - uses: codecov/codecov-action@v1
       if: ${{ always() }}
 
@@ -304,7 +265,7 @@ jobs:
       run: twine check ./related-packages/fileformats/dist/*
     - name: Check for PyPI token on tag
       id: deployable
-      if: github.event_name == 'release'
+      if: github.event_name == 'release' || github.event_name == 'repository_dispatch'
       env:
         PYPI_API_TOKEN: "${{ secrets.PYPI_FILEFORMATS_API_TOKEN }}"
       run: if [ -n "$PYPI_API_TOKEN" ]; then echo "DEPLOY=true" >> $GITHUB_OUTPUT; fi
@@ -336,7 +297,7 @@ jobs:
       run: twine check ./related-packages/fileformats-extras/dist/*
     - name: Check for PyPI token on tag
       id: deployable
-      if: github.event_name == 'release'
+      if: github.event_name == 'release' || github.event_name == 'repository_dispatch'
       env:
         PYPI_API_TOKEN: "${{ secrets.PYPI_FILEFORMATS_EXTRAS_API_TOKEN }}"
       run: if [ -n "$PYPI_API_TOKEN" ]; then echo "DEPLOY=true" >> $GITHUB_OUTPUT; fi
@@ -353,73 +314,58 @@ jobs:
     needs: [devcheck, test, deploy-fileformats, deploy-fileformats-extras]
     runs-on: ubuntu-latest
     steps:
-
     - name: Checkout repo
       uses: actions/checkout@v2
-
     - name: Set up Git user
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
-
     - name: Download version file
       uses: actions/download-artifact@v2
       with:
         name: VersionFile
         path: mrtrix3_version.txt
-
     - name: Extract Mrtrix version
       run: echo "MRTRIX_VERSION=$(cat mrtrix3_version.txt)" >> $GITHUB_ENV
-
     - name: Download auto-gen pydra
       uses: actions/download-artifact@v2
       with:
         name: AutoGen
         path: pydra/tasks/mrtrix3/${{ env.SUBPKG_NAME }}
-
     - name: Strip auto package from gitignore so it is included in package
       run: |
         sed -i '/\/pydra\/tasks\/mrtrix3\/${{ env.SUBPKG_NAME }}/d' .gitignore
-
     - name: Add auto-generated directory to git repo
       if: github.event_name == 'release' || github.event_name == 'repository_dispatch'
       run: |
         git add pydra/tasks/mrtrix3/$SUBPKG_NAME
         git commit -am"added auto-generated version to make new tag for package version"
         git status
-
     - name: Get latest version tag
       id: latest_tag
       run: |
         git fetch --tags
         echo "TAG=$(git tag -l | grep 'v.*' | tail -n 1 | awk -F post '{print $1}')" >> $GITHUB_OUTPUT
-
     - name: Overwrite the tag of release event with latest commit (i.e. including the auto directory)
       if: github.event_name == 'release'
       run: |
         git tag -d ${{ steps.latest_tag.outputs.TAG }};
         git tag -a ${{ steps.latest_tag.outputs.TAG }} -m"Tag used to create a pydra-mrtrix3 $MRTRIX_VERSION release";
-
     - name: Set up Python 3.11
       uses: actions/setup-python@v2
       with:
         python-version: 3.11
-
     - name: Install build tools
       run: python -m pip install --upgrade pip twine build
-
     - name: Build source and wheel distributions
       run: python -m build
-
     - name: Check distributions
       run: twine check dist/*
-
     - name: Upload sdist
       uses: actions/upload-artifact@v2
       with:
         name: SDist
         path: dist/*.tar.gz
-
     # Deploy on tags if PYPI_API_TOKEN is defined in the repository secrets.
     # Secrets are not accessible in the if: condition [0], so set an output variable [1]
     # [0] https://github.community/t/16928
@@ -430,7 +376,6 @@ jobs:
       env:
         PYPI_API_TOKEN: "${{ secrets.PYPI_API_TOKEN }}"
       run: if [ -n "$PYPI_API_TOKEN" ]; then echo ::set-output name=DEPLOY::true; fi
-
     - name: Upload to PyPI
       if: steps.deployable.outputs.DEPLOY
       uses: pypa/gh-action-pypi-publish@release/v1
