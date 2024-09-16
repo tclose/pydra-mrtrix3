@@ -91,7 +91,7 @@ class ImageDataFile(File):
 
 @extra_implementation(FileSet.read_metadata)
 def mrtrix_read_metadata(
-    mif: BaseMrtrixImage, selected_keys: ty.Optional[ty.Collection[str]] = None
+    mif: BaseMrtrixImage, **kwargs: ty.Any
 ) -> ty.Mapping[str, ty.Any]:
     metadata = {}
     with open(mif.fspath, "rb") as f:
@@ -127,6 +127,4 @@ def mrtrix_read_metadata(
             else:
                 metadata[key] = value
             line = f.readline().decode("utf-8")
-    if selected_keys:
-        metadata = {k: v for k, v in metadata.items() if k in selected_keys}
     return metadata
