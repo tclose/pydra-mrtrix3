@@ -1,3 +1,4 @@
+from fileformats.core import validated_property
 from fileformats.core.mixin import WithAdjacentFiles
 from fileformats.medimage import DwiEncoding, Nifti1, NiftiGz, NiftiX, NiftiGzX
 from .image import ImageFormat, ImageHeader, ImageFormatGz
@@ -11,7 +12,7 @@ class BFile(DwiEncoding):
 
 # NIfTI file format gzipped with BIDS side car
 class WithBFile(WithAdjacentFiles):
-    @property
+    @validated_property
     def encoding(self) -> BFile:
         return BFile(self.select_by_ext(BFile))
 
