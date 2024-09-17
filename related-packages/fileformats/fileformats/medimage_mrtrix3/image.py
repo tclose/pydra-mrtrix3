@@ -1,7 +1,7 @@
 from pathlib import Path
 import typing as ty
-from fileformats.core import FileSet, extra_implementation
-from fileformats.generic import File
+from fileformats.core import FileSet, extra_implementation, validated_property
+from fileformats.generic import BinaryFile
 from fileformats.application.archive import BaseGzip
 from fileformats.core.mixin import WithMagicNumber
 from fileformats.core.exceptions import FormatMismatchError
@@ -12,12 +12,12 @@ class MultiLineMetadataValue(list):
     pass
 
 
-class BaseMrtrixImage(WithMagicNumber, fileformats.medimage.MedicalImage, File):
+class BaseMrtrixImage(WithMagicNumber, fileformats.medimage.MedicalImage, BinaryFile):
 
     magic_number = b"mrtrix image\n"
     binary = True
 
-    @property
+    @validated_property
     def data_fspath(self):
         data_fspath = self.metadata["file"].split()[0]
         if data_fspath == ".":
@@ -48,8 +48,8 @@ class ImageFormat(BaseMrtrixImage):
     ext = ".mif"
     iana_mime = "application/x-mrtrix-image-format"
 
-    @property
-    def check_data_file(self):
+    @validated_property
+    def _check_data_file(self):
         if self.data_fspath != self.fspath:
             raise FormatMismatchError(
                 f"Data file ('{self.data_fspath}') is not set to the same file as header "
@@ -73,7 +73,7 @@ class ImageHeader(BaseMrtrixImage):
     ext = ".mih"
     iana_mime = "application/x-mrtrix-image-header"
 
-    @property
+    @validated_property
     def data_file(self):
         return ImageDataFile(self.data_fspath)
 
@@ -84,7 +84,7 @@ class ImageHeader(BaseMrtrixImage):
         super().__attrs_post_init__()
 
 
-class ImageDataFile(File):
+class ImageDataFile(BinaryFile):
 
     ext = ".dat"
 

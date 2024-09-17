@@ -115,19 +115,19 @@ jobs:
           --log-errors
           --latest
       - name: Upload MRtrix3 install
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: MRtrix3
           path: ${{ env.MRTRIX_INSTALL}}
       - name: Upload auto-gen pydra
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: AutoGen
           path: pydra/tasks/mrtrix3/${{ env.SUBPKG_NAME }}
       - name: Write version file
         run: echo $MRTRIX_VERSION > mrtrix3_version.txt
       - name: Upload version file
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: VersionFile
           path: mrtrix3_version.txt
@@ -352,7 +352,7 @@ jobs:
         git tag -d ${{ steps.latest_tag.outputs.TAG }};
         git tag -a ${{ steps.latest_tag.outputs.TAG }} -m"Tag used to create a pydra-mrtrix3 $MRTRIX_VERSION release";
     - name: Set up Python 3.11
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v3
       with:
         python-version: 3.11
     - name: Install build tools
@@ -362,7 +362,7 @@ jobs:
     - name: Check distributions
       run: twine check dist/*
     - name: Upload sdist
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: SDist
         path: dist/*.tar.gz
