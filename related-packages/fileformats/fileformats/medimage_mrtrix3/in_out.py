@@ -1,7 +1,7 @@
 import sys
 import typing as ty
-from fileformats.application import Dicom
 from fileformats.medimage import (
+    DicomImage,
     DicomDir,
     NiftiGzX,
     NiftiGz,
@@ -40,7 +40,7 @@ ImageIn: TypeAlias = ty.Union[
     ImageFormatB,
     ImageFormatGzB,
     ImageHeaderB,
-    Dicom,
+    DicomImage,
     DicomDir,
     NiftiGzX,
     NiftiGz,
