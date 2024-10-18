@@ -263,8 +263,6 @@ jobs:
       # checkout@v2 adds a header that makes branch protection report errors
       # because the Github action bot is not a collaborator on the repo
       run: git config --local --unset http.https://github.com/.extraheader
-    - name: Fetch tags
-      run: git fetch --prune --unshallow
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
@@ -301,8 +299,6 @@ jobs:
       # checkout@v2 adds a header that makes branch protection report errors
       # because the Github action bot is not a collaborator on the repo
       run: git config --local --unset http.https://github.com/.extraheader
-    - name: Fetch tags
-      run: git fetch --prune --unshallow
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
@@ -342,8 +338,6 @@ jobs:
       # checkout@v2 adds a header that makes branch protection report errors
       # because the Github action bot is not a collaborator on the repo
       run: git config --local --unset http.https://github.com/.extraheader
-    - name: Fetch tags
-      run: git fetch --prune --unshallow
     - name: Download version file
       uses: actions/download-artifact@v4
       with:
