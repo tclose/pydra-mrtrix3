@@ -45,6 +45,12 @@ jobs:
         run: |
           git config --global user.email "dummy@email.com"
           git config --global user.name "Dummy User"
+      - name: Unset header
+        # checkout@v2 adds a header that makes branch protection report errors
+        # because the Github action bot is not a collaborator on the repo
+        run: git config --local --unset http.https://github.com/.extraheader
+      - name: Fetch tags
+        run: git fetch --prune --unshallow
       - name: install dependencies
         run: |
            sudo apt-get update
@@ -253,6 +259,12 @@ jobs:
       with:
         submodules: recursive
         fetch-depth: 0
+    - name: Unset header
+      # checkout@v2 adds a header that makes branch protection report errors
+      # because the Github action bot is not a collaborator on the repo
+      run: git config --local --unset http.https://github.com/.extraheader
+    - name: Fetch tags
+      run: git fetch --prune --unshallow
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
@@ -285,6 +297,12 @@ jobs:
       with:
         submodules: recursive
         fetch-depth: 0
+    - name: Unset header
+      # checkout@v2 adds a header that makes branch protection report errors
+      # because the Github action bot is not a collaborator on the repo
+      run: git config --local --unset http.https://github.com/.extraheader
+    - name: Fetch tags
+      run: git fetch --prune --unshallow
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
@@ -320,6 +338,12 @@ jobs:
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
+    - name: Unset header
+      # checkout@v2 adds a header that makes branch protection report errors
+      # because the Github action bot is not a collaborator on the repo
+      run: git config --local --unset http.https://github.com/.extraheader
+    - name: Fetch tags
+      run: git fetch --prune --unshallow
     - name: Download version file
       uses: actions/download-artifact@v3
       with:
